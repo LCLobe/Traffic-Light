@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react";
 
+const myConstantColors = ["green", "yellow", "red"];
+
 const TrafficLight = () => {
 
 	const [ color, setColor] = useState("red");
@@ -13,16 +15,18 @@ const TrafficLight = () => {
 	const [lightCyclerActive, setLightCyclerActive] = useState(false);
 	const [colorPosition, setColorPosition ] =useState(0);
 
-	const colors = ["green", "yellow", "red"]
+	const [colors, setColors] = useState(myConstantColors) 
+	console.log(colors);
 
 	const purpleShowHandler = ()=>{
 		setShowPurpleLight(prev=>{
 			if (!prev) {
-				colors.push("purple");
+				const myModifiedColors = [...myConstantColors, "purple"];
+				setColors(myModifiedColors);
 				return true;
 			}
 			if (prev) {
-				colors.pop();
+				setColors(myConstantColors);
 				return false;
 			}	
 		});
@@ -74,25 +78,25 @@ const TrafficLight = () => {
 			clearInterval(myTimer);
 			if (lightCyclerActive) setColorPosition(prev=>{
 				if (prev == 0) {
-					myLogicSwitch(colors[1])
+					myLogicSwitch(colors[1]);
 					return 1;
 				}
 				if (prev == 1) {
-					myLogicSwitch(colors[2])
+					myLogicSwitch(colors[2]);
 					return 2;
 				}
 				if (prev == 2 && showPurpleLight) {
-					myLogicSwitch(colors[3])
+					myLogicSwitch(colors[3]);
 					return 3;
 				}
-				if (prev == 2 && !showPurpleLight) {
-					myLogicSwitch(colors[0])
+				if (prev == 2 && !showPurpleLight || prev == 3) {
+					myLogicSwitch(colors[0]);
 					return 0;
-				}	
+				}
 			})
 		  }, "1000");
 
-	},[colorPosition])
+	},[colorPosition, lightCyclerActive])
 
 	// Rendering
 
